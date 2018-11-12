@@ -5,7 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   validates :username, presence: true, uniqueness: true
   
-  belongs_to :photo
+  has_many :photos
   
   has_many :likes, :dependent => :destroy
   has_many :liked_photos, :through => :likes, :source => :photo

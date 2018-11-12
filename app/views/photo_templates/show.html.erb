@@ -1,65 +1,152 @@
-<div class="row mb-3">
-  <div class="col-md-8 offset-md-2">
-    <h1>
-      Photo #<%= @photo.id %> details
-    </h1>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+    </div>
+  </div>
 
-    <div class="row mb-3">
-      <div class="col">
-        <a href="/photos" class="btn btn-block btn-outline-secondary">
-          Go back
-        </a>
-      </div>
 
-      <div class="col">
-        <a href="/photos/<%= @photo.id %>/edit" class="btn btn-block btn-outline-secondary">
-          Edit photo
-        </a>
-      </div>
 
-      <div class="col">
-        <a href="/delete_photo/<%= @photo.id %>" class="btn btn-block btn-outline-secondary">
-          Delete photo
-        </a>
+
+
+
+  <% post=@photo %>
+
+  <div class="row mb-5">
+      <div class="col-md-8 offset-md-2">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">
+              <a href="/users/<%=post.user_id%>">
+                <%= User.find(post.user_id).username %>
+              </a>
+              <small><%= time_ago_in_words(post.created_at) %></small>
+            </h4>
+          </div>
+          
+          <div class="card-body">
+            
+              <a href="/photos/<%=post.id %>">
+                <img src="<%=post.image%>" class="img-fluid">
+              </a>
+              
+              <div>
+                
+                    <% if post.fans.pluck(:user_id).include? current_user.id %>
+                      <small> 
+                        <% if post.fans.size==1 %>
+                          <%=post.fans.pluck(:username)[0]%> likes this
+                        <%elsif post.fans.size==0 %>
+                        <%elsif post.fans.size==2 %>
+                          <%=post.fans.pluck(:username)[0] +" and " +post.fans.pluck(:username)[1]%> like this
+                        <%else%>
+                          <%post.fans.pluck(:username)[0..-2].each do |fan| %>
+                            <%=fan%>,
+                          <%end%>
+                           and <%=post.fans.pluck(:username)[-1]%> like this
+                        <%end%>
+                      
+                        <a href="/delete_like/<%=Like.where(photo_id: post.id, user_id: current_user.id)[0].id%>">
+                          <i class="fas fa-heart"></i> Unlike
+                        </a>
+                      </small>
+                    
+                    <%else%>
+                      <form action="/create_like" method="post">
+                        <small> 
+                          <% if post.fans.size==1 %>
+                            <%=post.fans.pluck(:username)[0]%> likes this
+                          <%elsif post.fans.size==0 %>
+                          <%elsif post.fans.size==2 %>
+                            <%=post.fans.pluck(:username)[0] +" and " +post.fans.pluck(:username)[1]%> like this
+                          <%else%>
+                            <%post.fans.pluck(:username)[0..-2].each do |fan| %>
+                              <%=fan%>,
+                            <%end%>
+                             and <%=post.fans.pluck(:username)[-1]%> like this
+                          <%end%>
+                        
+                          <input type="hidden" name="user_id" value="<%=current_user.id%>">
+                          <input type="hidden" name="photo_id" value="<%=post.id%>">
+                          <button class="btn btn-link pull-right">
+                            <i class="far fa-heart"></i>
+                              Like
+                          </button>
+                        </small>
+                      </form>
+                    <%end%>
+                      
+                  
+                  
+                <ul class="list-unstyled pt-3">
+                  <% post.comments.each do |comment|%>
+                    <li class="media mb-2">
+                      <div class="media-body">
+                      <h6>
+                        <a href="/users/<%=comment.user_id%>"> <%=comment.user.username%></a>
+                        <small><%=time_ago_in_words(comment.created_at)%></small>
+                      </h6>
+                      <%=comment.body%>
+                      </div>
+                    </li>
+                  <%end%>
+                
+                  <li class="media">
+                    <div class="media-body">
+                      <form action="/create_comment" method="post" class="pt-4">
+
+                        <input type="hidden" name="photo_id" value="<%=post.id%>">
+      
+                        <input type="hidden" name="user_id" value="<%=current_user.id%>">
+      
+                        <!-- Label and input for body -->
+                        <div class="form-group">
+                          <label for="body" class="sr-only">
+                            Body
+                          </label>
+      
+                          <div class="input-group">
+                            <input type="text" id="body" name="body" class="form-control" placeholder="Add a comment..." required>
+      
+                            <span class="input-group-append">
+                              <button class="btn btn-primary" type="submit">
+                                <i class="far fa-comment"></i>
+                                Add Comment
+                              </button>
+                            </span>
+                          </div> <!-- input-group -->
+                        </div>  <!-- form-group -->
+                      </form>
+                    </div> <!-- media-body -->
+                  </li>
+                </ul>
+                
+                <div class="btn-group d-flex" role="group">
+                    <a href="/photos/<%=post.id %>/edit" class="btn btn-warning w-100">
+                      <i class="fas fa-edit"></i>
+                      Edit
+                    </a>
+    
+                    <a href="/delete_photo/<%=post.id %>" class="btn btn-danger w-100" rel="nofollow">
+                      <i class="fas fa-trash"></i>
+    
+                      Delete
+                    </a>
+                </div>
+              </div>
+          </div>   
+        </div>
       </div>
     </div>
+    
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <a href="/photos" class="btn btn-primary btn-block">
+      <i class="fa fa-fw fa-chevron-left"></i>
 
-    <dl>
-      <dt>
-        Caption
-      </dt>
-      <dd>
-        <%= @photo.caption %>
-      </dd>
-
-      <dt>
-        Image
-      </dt>
-      <dd>
-        <%= @photo.image %>
-      </dd>
-
-      <dt>
-        User
-      </dt>
-      <dd>
-        <%= @photo.user_id %>
-      </dd>
-
-      <dt>
-        Created at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@photo.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@photo.updated_at) %> ago
-      </dd>
-    </dl>
+      Back
+    </a>
   </div>
 </div>
+</div>
+
 
