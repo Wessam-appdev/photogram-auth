@@ -7,9 +7,15 @@ class AllusersController < ApplicationController
   end
   
   def show
+    user_id=params.fetch("id_to_display")
     
-    render("/user_show.html.erb")
-    
+    if user_id == current_user.id.to_s
+      @user=current_user
+      render("/user_show.html.erb")
+    else
+      @user=User.find(user_id)
+      render("/other_user_show.html.erb")
+    end
   end
   
   

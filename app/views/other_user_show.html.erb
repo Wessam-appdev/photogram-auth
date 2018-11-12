@@ -4,17 +4,13 @@
     </div>
   </div>
 
-
-
 <div class="row">
   <div class="col-md-8 offset-md-2">
-    <a href="/photos/new" class="btn btn-primary btn-block">
-      <i class="fa fa-fw fa-plus"></i>
-
-      Add Photo
-    </a>
-
-    <hr>
+    <div class="jumbotron">
+      <h3>
+        <%=@user.username%>
+      </h3>
+    </div>
   </div>
 </div>
 
@@ -22,7 +18,9 @@
 
 
 
-  <% Photo.all.each do |post| %>
+
+
+  <% @user.photos.each do |post| %>
 
   <div class="row mb-5">
       <div class="col-md-8 offset-md-2">
@@ -133,23 +131,18 @@
                   </li>
                 </ul>
                 
-                
-                <% if post.user_id == current_user.id %>
-                  <div class="btn-group d-flex" role="group">
-                      <a href="/photos/<%=post.id %>/edit" class="btn btn-warning w-100">
-                        <i class="fas fa-edit"></i>
-                        Edit
-                      </a>
-      
-                      <a href="/delete_photo/<%=post.id %>" class="btn btn-danger w-100" rel="nofollow">
-                        <i class="fas fa-trash"></i>
-      
-                        Delete
-                      </a>
-                  </div>
-                <%else%>
-                <%end%>
-                  
+                <!--<div class="btn-group d-flex" role="group">-->
+                <!--    <a href="/photos/<%#=post.id %>/edit" class="btn btn-warning w-100">-->
+                <!--      <i class="fas fa-edit"></i>-->
+                <!--      Edit-->
+                <!--    </a>-->
+    
+                <!--    <a href="/delete_photo/<%#=post.id %>" class="btn btn-danger w-100" rel="nofollow">-->
+                <!--      <i class="fas fa-trash"></i>-->
+    
+                <!--      Delete-->
+                <!--    </a>-->
+                <!--</div>-->
               </div>
           </div>   
         </div>
@@ -157,5 +150,4 @@
     </div>
   <%end%>
 </div>
-
 
