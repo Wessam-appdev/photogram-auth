@@ -26,11 +26,15 @@
             <i class="fas fa-star"></i>
              <span class="hidden-sm">My Likes</span></a>
         </li>
+        <% if current_user.blank? %>
+        <% else %>
+        
           <li class="nav-item">
             <a class="nav-link" href="/users/<%=current_user.id%>">
               <i class="fas fa-user"></i>
               <span class="hidden-sm">My Wall</span></a>
           </li>
+        <%end%>
       </ul>
       <ul class="navbar-nav">
         <% if current_user.blank? %>

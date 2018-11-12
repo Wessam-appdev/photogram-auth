@@ -5,26 +5,44 @@
   </div>
 
 
-<% @user.likes.each do |like| %>
+<% @user.liked_photos.each do |post| %>
 
   <div class="row mb-5">
       <div class="col-md-8 offset-md-2">
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">
-              <a href="/users/<%=like.user_id%>">
-                <%= like.user.username %>
+              <a href="/users/<%=post.user_id%>">
+                <%= User.find(post.user_id).username %>
               </a>
-              <small><%= time_ago_in_words(like.photo.created_at) %></small>
+              <small><%= time_ago_in_words(post.created_at) %></small>
             </h4>
           </div>
           
           <div class="card-body">
             
-              <a href="/photos/<%=like.photo_id %>">
-                <img src="<%=like.photo.image%>" class="img-fluid">
+              <a href="/photos/<%=post.id %>">
+                <img src="<%=post.image%>" class="img-fluid">
               </a>
+              
+              <div>
+                <small> 
+                  <% if post.fans.size==1 %>
+                    <%=post.fans.pluck(:username)[0]%> likes this
+                  <%elsif post.fans.size==2 %>
+                    <%=post.fans.pluck(:username)[0] +" and " +post.fans.pluck(:username)[1]%> like this
+                  <%else%>
+                    <%post.fans.pluck(:username)[0..-2].each do |fan| %>
+                      <%=fan%>,
+                    <%end%>
+                     and <%=post.fans.pluck(:username)[-1]%> like this
+                  <%end%>
+                  
+                  <a href="/delete_like/<%=Like.where(photo_id: post.id, user_id: current_user.id)[0].id%>">Unlike</a>
+                </small>
                 
+                
+              </div>
           </div>   
               
               
