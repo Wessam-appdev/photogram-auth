@@ -5,7 +5,7 @@
   </div>
 
 
-<% @user.liked_photos.each do |post| %>
+  <% @user.liked_photos.each do |post| %>
 
   <div class="row mb-5">
       <div class="col-md-8 offset-md-2">
@@ -38,23 +38,62 @@
                      and <%=post.fans.pluck(:username)[-1]%> like this
                   <%end%>
                   
-                  <a href="/delete_like/<%=Like.where(photo_id: post.id, user_id: current_user.id)[0].id%>">Unlike</a>
+                  <a href="/delete_like/<%=Like.where(photo_id: post.id, user_id: current_user.id)[0].id%>"><i class="fas fa-heart"></i>Unlike</a>
                 </small>
+                
+                <ul class="list-unstyled pt-3">
+                  <% post.comments.each do |comment|%>
+                    <li class="media mb-2">
+                      <div class="media-body">
+                      <h6>
+                        <a href="/users/<%=comment.user_id%>"> <%=comment.user.username%></a>
+                        <small><%=time_ago_in_words(comment.created_at)%></small>
+                      </h6>
+                      <%=comment.body%>
+                      </div>
+                    </li>
+                  <%end%>
+                
+                  <li class="media">
+                    <div class="media-body">
+                      <form action="/create_comment" method="post" class="pt-4">
+
+                        <input type="hidden" name="photo_id" value="<%=post.id%>">
+      
+                        <input type="hidden" name="user_id" value="<%=current_user.id%>">
+      
+                        <!-- Label and input for body -->
+                        <div class="form-group">
+                          <label for="body" class="sr-only">
+                            Body
+                          </label>
+      
+                          <div class="input-group">
+                            <input type="text" id="body" name="body" class="form-control" placeholder="Add a comment..." required>
+      
+                            <span class="input-group-append">
+                              <button class="btn btn-primary" type="submit">
+                                <i class="far fa-comment"></i>
+                                Add Comment
+                              </button>
+                            </span>
+                          </div> <!-- input-group -->
+                        </div>  <!-- form-group -->
+                      </form>
+                    </div> <!-- media-body -->
+                  </li>
+                </ul>
+                
                 
                 
               </div>
           </div>   
-              
-              
-          
-          
         </div>
       </div>
   </div>
-  
+
   
   
 <%end%>
-
-
 </div>
+
