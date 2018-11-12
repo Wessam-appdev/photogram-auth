@@ -42,6 +42,15 @@
                 </small>
                 
                 <ul class="list-unstyled pt-3">
+                  <li class="media mb-2">
+                    <div class="media-body">
+                      <h6>
+                          <a href="/users/<%=post.user_id%>"> <%=post.user.username%></a>
+                          <small><%=time_ago_in_words(post.created_at)%></small>
+                      </h6>
+                      <%=post.caption%>
+                    </div>
+                  </li>
                   <% post.comments.each do |comment|%>
                     <li class="media mb-2">
                       <div class="media-body">

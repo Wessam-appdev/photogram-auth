@@ -30,7 +30,7 @@
           <div class="card-header">
             <h4 class="card-title">
               <a href="/users/<%=post.user_id%>">
-                <%= User.find(post.user_id).username %>
+                <%= post.user.username %>
               </a>
               <small><%= time_ago_in_words(post.created_at) %></small>
             </h4>
@@ -69,6 +69,7 @@
                           <% if post.fans.size==1 %>
                             <%=post.fans.pluck(:username)[0]%> likes this
                           <%elsif post.fans.size==0 %>
+                            be the first to like this
                           <%elsif post.fans.size==2 %>
                             <%=post.fans.pluck(:username)[0] +" and " +post.fans.pluck(:username)[1]%> like this
                           <%else%>
@@ -91,6 +92,15 @@
                   
                   
                 <ul class="list-unstyled pt-3">
+                  <li class="media mb-2">
+                    <div class="media-body">
+                      <h6>
+                          <a href="/users/<%=post.user_id%>"> <%=post.user.username%></a>
+                          <small><%=time_ago_in_words(post.created_at)%></small>
+                      </h6>
+                      <%=post.caption%>
+                    </div>
+                  </li>
                   <% post.comments.each do |comment|%>
                     <li class="media mb-2">
                       <div class="media-body">

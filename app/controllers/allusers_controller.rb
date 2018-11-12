@@ -13,7 +13,8 @@ class AllusersController < ApplicationController
       @user=current_user
       render("/user_show.html.erb")
     else
-      @user=User.find(user_id)
+      @other_user=User.find(user_id)
+      @user=current_user
       render("/other_user_show.html.erb")
     end
   end
